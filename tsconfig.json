@@ -12,6 +12,7 @@
     /* Strictness */
     "strict": true,
     "noUncheckedIndexedAccess": true,
+    "strictNullChecks": true,
     "checkJs": true,
 
     /* Bundled projects */
