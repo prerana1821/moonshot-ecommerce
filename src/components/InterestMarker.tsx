@@ -1,50 +1,31 @@
 import { useState } from "react";
+import { api } from "~/utils/api";
 
 const InterestMarker = () => {
-  const [interests, setInterests] = useState([
-    { id: 1, name: "Shoes", checked: true },
-    { id: 2, name: "Men T-shirts", checked: false },
-    { id: 3, name: "Makeup", checked: true },
-    { id: 4, name: "Jewellery", checked: true },
-    { id: 5, name: "Women T-shirts", checked: false },
-    { id: 6, name: "Electronics", checked: false },
-    { id: 7, name: "Books", checked: false },
-    { id: 8, name: "Sports Equipment", checked: false },
-    { id: 9, name: "Home Decor", checked: false },
-    { id: 10, name: "Kitchen Appliances", checked: false },
-    { id: 11, name: "Gardening", checked: false },
-    { id: 12, name: "Toys", checked: false },
-    { id: 13, name: "Accessories", checked: false },
-    { id: 14, name: "Stationery", checked: false },
-    { id: 15, name: "Craft Supplies", checked: false },
-    { id: 16, name: "Fitness Gear", checked: false },
-    { id: 17, name: "Pet Supplies", checked: false },
-    { id: 18, name: "Art Supplies", checked: false },
-    { id: 19, name: "Music Instruments", checked: false },
-    { id: 20, name: "Video Games", checked: false },
-    { id: 21, name: "Board Games", checked: false },
-    { id: 22, name: "Collectibles", checked: false },
-    { id: 23, name: "Antiques", checked: false },
-  ]);
+  const { data } = api.category.getAll.useQuery();
+
+  console.log(data);
+
+  const [interests, setInterests] = useState(data);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const toggleInterest = (id: number) => {
-    setInterests(
-      interests.map((interest) =>
-        interest.id === id
-          ? { ...interest, checked: !interest.checked }
-          : interest,
-      ),
-    );
-  };
+  // const toggleInterest = (id: number) => {
+  //   setInterests(
+  //     interests?.map((interest) =>
+  //       interest.id === id
+  //         ? { ...interest, checked: !interest.checked }
+  //         : interest,
+  //     ),
+  //   );
+  // };
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentInterests = interests.slice(indexOfFirstItem, indexOfLastItem);
+  const currentInterests = interests?.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(interests.length / itemsPerPage);
+  const totalPages = interests ? Math.ceil(interests.length / itemsPerPage) : 0;
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
@@ -72,12 +53,12 @@ const InterestMarker = () => {
       <p className="mb-6">We will keep you notified.</p>
       <h3 className="mb-2 text-lg font-bold">My saved interests!</h3>
       <ul>
-        {currentInterests.map((interest) => (
+        {currentInterests?.map((interest) => (
           <li key={interest.id} className="mb-2 flex items-center">
             <input
               type="checkbox"
-              checked={interest.checked}
-              onChange={() => toggleInterest(interest.id)}
+              // checked={interest.checked}
+              // onChange={() => toggleInterest(interest.id)}
               className="form-checkbox h-5 w-5 rounded text-indigo-600"
             />
             <span className="ml-2">{interest.name}</span>

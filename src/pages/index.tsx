@@ -1,12 +1,12 @@
 import Head from "next/head";
-import Link from "next/link";
+import InterestMarker from "~/components/InterestMarker";
 import Footer from "~/components/Layout/Footer";
 import Header from "~/components/Layout/Header";
 
 import { api } from "~/utils/api";
 
 export default function Home() {
-  const hello = api.post.hello.useQuery({ text: "from tRPC" });
+  // const { data } = api.post.hello.useQuery({ text: "from tRPC" });
 
   return (
     <>
@@ -16,7 +16,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <main className="flex min-h-screen flex-col items-center justify-center"></main>
+      <main className="my-10 flex flex-col items-center justify-center">
+        <InterestMarker />
+      </main>
       <Footer />
     </>
   );
