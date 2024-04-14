@@ -46,13 +46,17 @@ export default function Login() {
       const response = await mutation.mutateAsync({ email, password });
 
       if (response.success) {
-        setCookie("userDetails", JSON.stringify(response.user));
-        setCookie("token", JSON.stringify(response.token));
-        void router.push("/");
+        if (!response.user.isVerified) {
+          void router.push("/email-verification");
+        } else {
+          setCookie("userDetails", JSON.stringify(response.user));
+          setCookie("token", JSON.stringify(response.token));
+          void router.push("/");
+        }
       } else {
         setFormData((prevFormData) => ({
           ...prevFormData,
-          error: "Invalid credentials.",
+          error: "Something went wrong! Please try again later.",
           loading: false,
         }));
       }

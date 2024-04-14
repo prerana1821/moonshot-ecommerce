@@ -90,13 +90,19 @@ export default function EmailVerification() {
         <h1 className="mb-4 text-center text-3xl font-bold">
           Verify your email
         </h1>
-        <p className="mb-6 text-center text-gray-600">
-          Enter the 8-digit code you received on{" "}
-          <span className="block font-semibold">
-            {user?.email?.replace(/(?<=.{2}).(?=[^@]*?@)/g, "*")}
-          </span>
-          .
-        </p>
+        {user?.email ? (
+          <p className="mb-6 text-center text-gray-600">
+            Enter the 8-digit code you received on{" "}
+            <span className="block font-semibold">
+              {user?.email?.replace(/(?<=.{2}).(?=[^@]*?@)/g, "*")}
+            </span>
+            .
+          </p>
+        ) : (
+          <p className="mb-6 text-center text-gray-600">
+            Please check the verification mail sent to prior.
+          </p>
+        )}
         <div className="flex items-center justify-center space-x-4">
           {otp.map((digit, index) => (
             <input

@@ -1,6 +1,6 @@
-import { z } from "zod";
 import { db } from "~/server/db";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { getAllInput, markInterestInput } from "~/utils/validations";
 
 const findUserByEmail = async (email: string) => {
   return await db.user.findUnique({
@@ -10,26 +10,24 @@ const findUserByEmail = async (email: string) => {
 };
 
 export const categoryRouter = createTRPCRouter({
-  getAll: publicProcedure
-    .input(z.object({ email: z.string().email() }))
-    .query(async ({ input }) => {
-      const user = await findUserByEmail(input.email);
-      if (!user) {
-        throw new Error("User not found");
-      }
+  getAll: publicProcedure.input(getAllInput).query(async ({ input }) => {
+    const user = await findUserByEmail(input.email);
+    if (!user) {
+      throw new Error("User not found");
+    }
 
-      const categories = await db.category.findMany();
+    const categories = await db.category.findMany();
 
-      const categoriesWithInterestStatus = categories.map((category) => ({
-        ...category,
-        checked: user.interests.some((interest) => interest.id === category.id),
-      }));
+    const categoriesWithInterestStatus = categories.map((category) => ({
+      ...category,
+      checked: user.interests.some((interest) => interest.id === category.id),
+    }));
 
-      return categoriesWithInterestStatus;
-    }),
+    return categoriesWithInterestStatus;
+  }),
 
   markInterest: publicProcedure
-    .input(z.object({ categoryId: z.number(), email: z.string().email() }))
+    .input(markInterestInput)
     .mutation(async ({ input }) => {
       const { email, categoryId } = input;
 
