@@ -1,15 +1,21 @@
-import { useState } from "react";
-import { api } from "~/utils/api";
+import { useEffect, useState } from "react";
 
-const InterestMarker = () => {
-  const { data } = api.category.getAll.useQuery();
-
-  console.log(data);
-
+const InterestMarker = ({
+  data,
+}: {
+  data: {
+    id: number;
+    name: string;
+  }[];
+}) => {
   const [interests, setInterests] = useState(data);
 
+  useEffect(() => {
+    setInterests(data);
+  }, [data]);
+
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 6;
 
   // const toggleInterest = (id: number) => {
   //   setInterests(
@@ -30,7 +36,10 @@ const InterestMarker = () => {
   const renderPageNumbers = () => {
     const pageNumbers = [];
 
-    for (let i = 1; i <= totalPages; i++) {
+    const startPage = Math.max(1, currentPage - 1);
+    const endPage = Math.min(startPage + 3, totalPages);
+
+    for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(
         <button
           key={i}

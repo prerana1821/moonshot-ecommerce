@@ -10,12 +10,13 @@ export default function Home() {
   // const { data } = api.post.hello.useQuery({ text: "from tRPC" });
 
   const user = JSON.parse(getCookie("userDetails") || "{}");
-
-  const userDetails = api.auth.getCurrentUser.useQuery({
+  const { data: currentUserDetails } = api.auth.getCurrentUser.useQuery({
     email: user.email,
   });
 
-  console.log({ userDetails });
+  const { data: interests } = api.category.getAll.useQuery();
+
+  console.log({ currentUserDetails, interests });
   return (
     <>
       <Head>
@@ -25,7 +26,7 @@ export default function Home() {
       </Head>
       <Header />
       <main className="my-10 flex flex-col items-center justify-center">
-        <InterestMarker />
+        <InterestMarker data={interests || []} />
       </main>
       <Footer />
     </>

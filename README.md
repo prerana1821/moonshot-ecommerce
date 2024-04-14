@@ -15,15 +15,14 @@ If you are not familiar with the different technologies used in this project, pl
 
 ## Tasks
 
-- Develop a simple sign-up and login flow for an e-commerce
+- Develop a simple sign-up and login flow for an e-commerce (DONE)
 - Login Page (DONE)
 - Signup Page (DONE)
 - Email Verification (DONE)
-- InterestMarker (protected route)
+- InterestMarker (protected route) (DONE)
 - Header (DONE)
 - Footer (DONE)
 - Create 100 entries for categories in database using faker. (DONE)
+- This is a paginated list where only 6 categories are visible at a time.
 - Users can mark the categories that they are interested in.
-- This is a paginated list where only 6 categories are
-  visible at a time.
-- Users should be able to see what categories they selected when they logout and login again. So we should store what they check in our database.
+- Users should be able to see what categories they selected when they logout and login again.
