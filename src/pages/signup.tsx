@@ -1,13 +1,47 @@
 import Link from "next/link";
+import { type FormEvent, useState } from "react";
+import { api } from "~/utils/api";
 
 export default function Signup() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+
+  const mutation = api.auth.signup.useMutation();
+
+  const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const response = mutation.mutate({
+        name,
+        email,
+        password,
+      });
+
+      console.log({ response });
+
+      // if (response.token) {
+      //   console.log(response.token);
+      //   console.log("Hello WROLD");
+
+      //   // router.push("/dashboard");
+      // } else {
+      //   console.error("Login failed:", response.error);
+      // }
+    } catch (error: unknown) {
+      console.error("Login failed:", error);
+    }
+  };
+
   return (
     <div className="m-10 flex items-center justify-center">
       <div className="rounded-lg bg-white p-20 shadow-md">
         <h1 className="mb-6 text-center text-2xl font-bold">
           Create your account
         </h1>
-        <form>
+        <form onSubmit={handleSignup}>
           <div className="mb-4">
             <label
               htmlFor="name"
@@ -18,7 +52,9 @@ export default function Signup() {
             <input
               type="text"
               id="name"
-              className="focus:shadow-outline w-96 appearance-none rounded  border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="focus:shadow-outline w-96 appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
               placeholder="Enter"
             />
           </div>
@@ -32,6 +68,8 @@ export default function Signup() {
             <input
               type="email"
               id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
               placeholder="Enter"
             />
@@ -46,18 +84,20 @@ export default function Signup() {
             <input
               type="password"
               id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
               placeholder="Enter"
             />
           </div>
+          {error && <p className="mb-4 text-red-500">{error}</p>}
           <div className="flex flex-col items-center justify-between gap-4">
             <button
               className="focus:shadow-outline  w-96  rounded bg-black px-4 py-2 font-bold text-white focus:outline-none"
-              type="button"
+              type="submit"
             >
               CREATE ACCOUNT
             </button>
-
             <div>
               <Link
                 href="/login"
