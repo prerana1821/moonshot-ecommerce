@@ -14,7 +14,9 @@ export default function Home() {
     email: user.email,
   });
 
-  const { data: interests } = api.category.getAll.useQuery();
+  const { data: interests } = api.category.getAll.useQuery({
+    email: user.email,
+  });
 
   console.log({ currentUserDetails, interests });
   return (
@@ -26,7 +28,7 @@ export default function Home() {
       </Head>
       <Header />
       <main className="my-10 flex flex-col items-center justify-center">
-        <InterestMarker data={interests || []} />
+        <InterestMarker data={interests || []} email={user.email} />
       </main>
       <Footer />
     </>

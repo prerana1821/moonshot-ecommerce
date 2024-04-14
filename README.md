@@ -23,6 +23,6 @@ If you are not familiar with the different technologies used in this project, pl
 - Header (DONE)
 - Footer (DONE)
 - Create 100 entries for categories in database using faker. (DONE)
-- This is a paginated list where only 6 categories are visible at a time.
-- Users can mark the categories that they are interested in.
-- Users should be able to see what categories they selected when they logout and login again.
+- This is a paginated list where only 6 categories are visible at a time. (DONE)
+- Users can mark the categories that they are interested in. (DONE)
+- Users should be able to see what categories they selected when they logout and login again. (DONE)
