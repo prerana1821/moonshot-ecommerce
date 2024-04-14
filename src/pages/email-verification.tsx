@@ -7,15 +7,13 @@ export default function EmailVerification() {
   const router = useRouter();
   const [otp, setOtp] = useState(Array.from({ length: 8 }, () => ""));
 
+  const user = JSON.parse(getCookie("userDetails") || "{}");
+
   const mutation = api.auth.verifyOtp.useMutation();
 
   const handleVerify = async () => {
     try {
       const pin = otp.join("");
-
-      const user = JSON.parse(getCookie("userDetails") || "{}");
-
-      console.log(user);
 
       const token = JSON.parse(getCookie("token") || "");
 
@@ -43,11 +41,19 @@ export default function EmailVerification() {
   };
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center bg-gray-200">
-      <div className="rounded-lg bg-white p-10 shadow-lg">
-        <h1 className="mb-4 text-3xl font-bold">Verify your email</h1>
-        <p className="mb-6 text-gray-600">
-          Enter the 8-digit code you received on swa****@gmail.com
+    <div className="m-10 flex items-center justify-center">
+      <div className="rounded-lg border border-solid border-gray-500  bg-white p-12">
+        <h1 className="mb-4 text-center text-3xl font-bold">
+          Verify your email
+        </h1>
+        <p className="mb-6 text-center text-gray-600">
+          Enter the 8-digit code you received on
+          <span className="block font-semibold">
+            {user?.email.slice(0, 3) +
+              "***" +
+              user?.email.slice(user?.email.indexOf("@"))}
+          </span>
+          . .
         </p>
         <div className="flex items-center justify-center space-x-4">
           {otp.map((digit, index) => (
@@ -63,7 +69,7 @@ export default function EmailVerification() {
         </div>
         <button
           onClick={handleVerify}
-          className="mt-6 w-full rounded-3xl bg-black px-6 py-2 text-xl font-medium uppercase text-white"
+          className="mt-6 w-full rounded bg-black px-6 py-2 text-xl font-medium uppercase text-white"
         >
           Verify
         </button>

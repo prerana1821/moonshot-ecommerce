@@ -77,10 +77,12 @@ const InterestMarker = ({
   };
 
   return (
-    <div className="rounded-lg bg-white p-8 shadow-md">
-      <h2 className="mb-4 text-xl font-bold">Please mark your interests!</h2>
-      <p className="mb-6">We will keep you notified.</p>
-      <h3 className="mb-2 text-lg font-bold">My saved interests!</h3>
+    <div className="rounded-lg border border-solid border-gray-500 bg-white px-14 py-8">
+      <h2 className="mb-4 text-center text-xl font-bold">
+        Please mark your interests!
+      </h2>
+      <p className="mb-6 text-center">We will keep you notified.</p>
+      <h3 className="mb-4 text-lg font-bold">My saved interests!</h3>
       <ul>
         {currentInterests?.map((interest) => (
           <li key={interest.id} className="mb-2 flex items-center">
@@ -90,12 +92,14 @@ const InterestMarker = ({
                 onChange={() => markInterest(interest.id)}
                 disabled={loading}
                 checked={interest.checked}
-                className="form-checkbox h-5 w-5 rounded text-indigo-600"
+                className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-gray-950 focus:ring-2 focus:ring-gray-950"
               />
             ) : (
               <div className="flex justify-center">load</div>
             )}
-            <span className="ml-2">{interest.name}</span>
+            <label className="ms-2 text-sm font-medium text-black">
+              {interest.name}
+            </label>
           </li>
         ))}
       </ul>

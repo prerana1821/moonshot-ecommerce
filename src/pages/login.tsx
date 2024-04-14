@@ -36,13 +36,13 @@ export default function Login() {
     }
   };
   return (
-    <div className="flex h-screen flex-col items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
+    <div className="my-14 flex flex-col items-center justify-center">
+      <div className="w-full max-w-md rounded-lg border  border-solid border-gray-500 bg-white p-10">
         <h1 className="mb-2 text-center text-3xl font-bold">Login</h1>
-        <p className="mb-4 text-center text-sm text-gray-600">
+        <p className="mb-4 text-center text-lg text-gray-600">
           Welcome back to ECOMMERCE
         </p>
-        <p className="mb-4 text-center text-xs text-gray-500">
+        <p className="mb-4 text-center text-sm text-gray-500">
           The next gen business marketplace.
         </p>
         <form className="space-y-4" onSubmit={handleLogin}>
@@ -81,7 +81,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
               <button
-                className="absolute right-3 top-1/2 -translate-y-1/2 transform text-gray-400 focus:outline-none"
+                className="absolute right-3 top-1/2 -translate-y-1/2 transform text-gray-400 underline focus:outline-none"
                 onClick={toggleShowPassword}
               >
                 {showPassword ? "Hide" : "Show"}
@@ -91,9 +91,9 @@ export default function Login() {
           <div>
             <button
               type="submit"
-              className="w-full rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none"
+              className="w-full rounded bg-black px-4 py-2 text-white hover:bg-gray-800 focus:outline-none"
             >
-              Login
+              LOGIN
             </button>
           </div>
         </form>
@@ -108,7 +108,7 @@ export default function Login() {
         <div className="mt-4 text-center">
           <p>
             Don&apos;t have an Account?{" "}
-            <Link href="/signup" className="text-blue-500 hover:underline">
+            <Link href="/signup" className="text-black hover:underline">
               SIGN UP
             </Link>
           </p>

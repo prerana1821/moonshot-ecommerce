@@ -37,7 +37,7 @@ export default function Signup() {
 
   return (
     <div className="m-10 flex items-center justify-center">
-      <div className="rounded-lg bg-white p-20 shadow-md">
+      <div className="rounded-lg border border-solid border-gray-500  bg-white p-12">
         <h1 className="mb-6 text-center text-2xl font-bold">
           Create your account
         </h1>
@@ -93,18 +93,18 @@ export default function Signup() {
           {error && <p className="mb-4 text-red-500">{error}</p>}
           <div className="flex flex-col items-center justify-between gap-4">
             <button
-              className="focus:shadow-outline  w-96  rounded bg-black px-4 py-2 font-bold text-white focus:outline-none"
+              className="focus:shadow-outline  w-96  rounded bg-black px-4 py-2  text-white focus:outline-none"
               type="submit"
             >
               CREATE ACCOUNT
             </button>
-            <div>
-              <Link
-                href="/login"
-                className="inline-block align-baseline text-sm font-bold text-black "
-              >
-                Have an Account? LOGIN
-              </Link>
+            <div className="mt-4 text-center">
+              <p>
+                Have an Account?{" "}
+                <Link href="/login" className="text-black hover:underline">
+                  LOGIN
+                </Link>
+              </p>
             </div>
           </div>
         </form>

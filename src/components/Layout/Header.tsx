@@ -1,9 +1,10 @@
-import { deleteCookie } from "cookies-next";
-import Link from "next/link";
+import { deleteCookie, getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 
 const Header = () => {
   const router = useRouter();
+
+  const user = JSON.parse(getCookie("userDetails") || "{}");
 
   const handleLogout = () => {
     deleteCookie("token");
@@ -12,31 +13,27 @@ const Header = () => {
   };
 
   return (
-    <nav className="bg-white shadow-md">
-      <div className="mr-4 flex justify-end p-2">
-        <Link
-          href="/"
-          className="mr-4 text-sm text-gray-600 hover:text-gray-900 "
-        >
+    <header className="bg-white shadow-md">
+      <div className="mr-4 flex items-center justify-end p-2">
+        <p className="mr-4 cursor-pointer text-sm text-gray-600 hover:text-gray-900 ">
           Help
-        </Link>
-        <Link
-          href="/"
-          className="mr-4 text-sm text-gray-600 hover:text-gray-900 "
-        >
+        </p>
+        <p className="mr-4 cursor-pointer text-sm text-gray-600 hover:text-gray-900">
           Orders & Returns
-        </Link>
-        <Link
-          href="/"
-          className="mr-4 text-sm text-gray-600 hover:text-gray-900 "
-        >
-          Hi, John
-        </Link>
-        {/* <div className='relative'>
-          <button className='flex items-center text-sm font-medium text-gray-600 hover:text-gray-900'>
-            Hi, John
+        </p>
+        {user.email && (
+          <p className="mr-4 text-sm text-gray-600 hover:text-gray-900 ">
+            Hi, {user.name}
+          </p>
+        )}
+        {user.email && (
+          <button
+            className="cursor-pointer rounded-md bg-black p-1 px-2 text-sm text-white shadow-md"
+            onClick={handleLogout}
+          >
+            Logout
           </button>
-        </div> */}
+        )}
       </div>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
@@ -44,38 +41,23 @@ const Header = () => {
             <h1 className="text-2xl font-bold text-gray-800">ECOMMERCE</h1>
           </div>
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              <Link
-                href="/"
-                className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
-              >
+            <nav className="ml-10 flex items-baseline space-x-4">
+              <p className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">
                 Categories
-              </Link>
-              <Link
-                href="/"
-                className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
-              >
+              </p>
+              <p className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">
                 Sale
-              </Link>
-              <Link
-                href="/"
-                className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
-              >
+              </p>
+              <p className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">
                 Clearance
-              </Link>
-              <Link
-                href="/"
-                className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
-              >
+              </p>
+              <p className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">
                 New stock
-              </Link>
-              <Link
-                href="/"
-                className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
-              >
+              </p>
+              <p className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">
                 Trending
-              </Link>
-            </div>
+              </p>
+            </nav>
           </div>
 
           <div className="relative ml-4">
@@ -93,17 +75,33 @@ const Header = () => {
                   <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
               </button>
+              <button className="p-2">
+                <svg
+                  stroke="currentColor"
+                  fill="none"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  height="1em"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+              </button>
             </div>
           </div>
-          <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
       <div className="flex justify-center bg-gray-200 text-black">
-        <Link href="/" className="relative inline-block  px-4 py-2 font-bold">
+        <p className="relative inline-block  px-4 py-2 font-bold">
           Get 10% off on business sign up
-        </Link>
+        </p>
       </div>
-    </nav>
+    </header>
   );
 };
 

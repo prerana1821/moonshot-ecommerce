@@ -7,6 +7,8 @@ import "~/styles/globals.css";
 import { useEffect } from "react";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/router";
+import Header from "~/components/Layout/Header";
+import Footer from "~/components/Layout/Footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,7 +28,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
   return (
     <main className={`font-sans ${inter.variable}`}>
+      <Header />
       <Component {...pageProps} />
+      <Footer />
     </main>
   );
 };
