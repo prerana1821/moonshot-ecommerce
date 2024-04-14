@@ -2,7 +2,13 @@ import { setCookie } from "cookies-next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { type FormEvent, useState } from "react";
+import { z } from "zod";
 import { api } from "~/utils/api";
+
+const schema = z.object({
+  email: z.string().email("Invalid email format"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
 
 export default function Login() {
   const router = useRouter();
@@ -34,16 +40,25 @@ export default function Login() {
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    try {
+      schema.parse(formData);
+    } catch (error) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        error: "Something went wrong. Please check your input fields.",
+      }));
+      return;
+    }
+
     setFormData((prevFormData) => ({
       ...prevFormData,
       loading: true,
       error: "",
     }));
 
-    const { email, password } = formData;
-
     try {
-      const response = await mutation.mutateAsync({ email, password });
+      const response = await mutation.mutateAsync(formData);
 
       if (response.success) {
         if (!response.user.isVerified) {
@@ -102,6 +117,7 @@ export default function Login() {
               placeholder="Enter your email"
               value={email}
               onChange={handleChange}
+              required
             />
           </div>
           <div>
@@ -120,8 +136,10 @@ export default function Login() {
                 placeholder="Enter your password"
                 value={password}
                 onChange={handleChange}
+                required
               />
               <button
+                type="button" // Change type to button
                 className="absolute right-3 top-1/2 -translate-y-1/2 transform text-gray-400 underline focus:outline-none"
                 onClick={toggleShowPassword}
               >
