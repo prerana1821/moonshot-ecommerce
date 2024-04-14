@@ -51,7 +51,17 @@ export const authRouter = createTRPCRouter({
       .setExpirationTime(`${jwtExpires}s`)
       .sign(getJwtSecretKey());
 
-    return { token, message: "User login successfully" };
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        isVerified: user.isVerified,
+      },
+      token,
+      success: true,
+      message: "User login successfully",
+    };
   }),
 
   signup: publicProcedure.input(signupInput).mutation(async ({ input }) => {
@@ -97,8 +107,14 @@ export const authRouter = createTRPCRouter({
     await transporter.sendMail(mailOptions);
 
     return {
-      user: newUser,
+      user: {
+        id: newUser.id,
+        email: newUser.email,
+        name: newUser.name,
+        isVerified: newUser.isVerified,
+      },
       token: encryptedToken,
+      success: true,
       message: "User signed up successfully",
     };
   }),
@@ -124,13 +140,31 @@ export const authRouter = createTRPCRouter({
           },
         });
 
-        return { message: "OTP Successfully Verified" };
+        return { message: "OTP Successfully Verified", success: true };
       } catch (error) {
         throw new Error("Internal Error");
       }
     }),
 
-  logout: publicProcedure.mutation(async () => {
-    return { message: "Logout successful" };
-  }),
+  getCurrentUser: publicProcedure
+    .input(z.object({ email: z.string() }))
+    .query(async ({ input }) => {
+      try {
+        const user = await db.user.findUnique({
+          where: {
+            email: input.email,
+          },
+          include: {
+            interests: true,
+          },
+        });
+
+        return {
+          ...user,
+          password: undefined,
+        };
+      } catch (error) {
+        return null;
+      }
+    }),
 });

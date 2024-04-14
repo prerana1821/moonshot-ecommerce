@@ -1,8 +1,11 @@
+import { setCookie } from "cookies-next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { type FormEvent, useState } from "react";
 import { api } from "~/utils/api";
 
 export default function Signup() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,24 +17,21 @@ export default function Signup() {
     e.preventDefault();
 
     try {
-      const response = mutation.mutate({
+      const mutationResult = await mutation.mutateAsync({
         name,
         email,
         password,
       });
 
-      console.log({ response });
+      if (mutationResult.success) {
+        console.log(mutationResult.user);
+        setCookie("userDetails", JSON.stringify(mutationResult.user));
+        setCookie("token", JSON.stringify(mutationResult.token));
 
-      // if (response.token) {
-      //   console.log(response.token);
-      //   console.log("Hello WROLD");
-
-      //   // router.push("/dashboard");
-      // } else {
-      //   console.error("Login failed:", response.error);
-      // }
-    } catch (error: unknown) {
-      console.error("Login failed:", error);
+        void router.push("/email-verification");
+      }
+    } catch (error) {
+      console.error("Unexpected error during signup:", error);
     }
   };
 

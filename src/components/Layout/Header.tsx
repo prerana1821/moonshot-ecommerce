@@ -1,6 +1,16 @@
+import { deleteCookie } from "cookies-next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const Header = () => {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    deleteCookie("token");
+    deleteCookie("userDetails");
+    void router.push("/login");
+  };
+
   return (
     <nav className="bg-white shadow-md">
       <div className="mr-4 flex justify-end p-2">
@@ -85,6 +95,7 @@ const Header = () => {
               </button>
             </div>
           </div>
+          <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
       <div className="flex justify-center bg-gray-200 text-black">

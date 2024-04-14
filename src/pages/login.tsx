@@ -1,8 +1,12 @@
+import { setCookie } from "cookies-next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { type FormEvent, useState } from "react";
 import { api } from "~/utils/api";
 
 export default function Login() {
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -17,23 +21,20 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = mutation.mutate({ email, password });
+      const response = await mutation.mutateAsync({ email, password });
 
-      console.log({ response });
+      if (response.success) {
+        console.log("Login successful:", response.user);
 
-      // if (response.token) {
-      //   console.log(response.token);
-      //   console.log("Hello WROLD");
+        setCookie("userDetails", JSON.stringify(response.user));
+        setCookie("token", JSON.stringify(response.token));
 
-      //   // router.push("/dashboard");
-      // } else {
-      //   console.error("Login failed:", response.error);
-      // }
-    } catch (error: unknown) {
-      console.error("Login failed:", error);
+        void router.push("/");
+      }
+    } catch (error) {
+      console.error("Unexpected error during login:", error);
     }
   };
-
   return (
     <div className="flex h-screen flex-col items-center justify-center bg-gray-100">
       <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">

@@ -1,3 +1,4 @@
+import { getCookie } from "cookies-next";
 import Head from "next/head";
 import InterestMarker from "~/components/InterestMarker";
 import Footer from "~/components/Layout/Footer";
@@ -8,6 +9,13 @@ import { api } from "~/utils/api";
 export default function Home() {
   // const { data } = api.post.hello.useQuery({ text: "from tRPC" });
 
+  const user = JSON.parse(getCookie("userDetails") || "{}");
+
+  const userDetails = api.auth.getCurrentUser.useQuery({
+    email: user.email,
+  });
+
+  console.log({ userDetails });
   return (
     <>
       <Head>

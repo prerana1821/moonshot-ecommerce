@@ -1,7 +1,10 @@
+import { getCookie } from "cookies-next";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { api } from "~/utils/api";
 
 export default function EmailVerification() {
+  const router = useRouter();
   const [otp, setOtp] = useState(Array.from({ length: 8 }, () => ""));
 
   const mutation = api.auth.verifyOtp.useMutation();
@@ -10,27 +13,29 @@ export default function EmailVerification() {
     try {
       const pin = otp.join("");
 
-      const response = mutation.mutate({
+      const user = JSON.parse(getCookie("userDetails") || "{}");
+
+      console.log(user);
+
+      const token = JSON.parse(getCookie("token") || "");
+
+      const mutationResult = await mutation.mutateAsync({
         pin,
-        email: "swa****@gmail.com", // Provide the email here
-        encryptedToken: "your_encrypted_token_here", // Provide the encrypted token here
+        email: user.email,
+        encryptedToken: token,
       });
 
-      console.log({ response });
-      // If OTP verification is successful, redirect to the lo6gin page
-      // if (response) {
-      //   router.push("/login");
-      // }
-    } catch (error: unknown) {
-      console.error("Verification failed:", error);
-      // Handle verification failure
+      if (mutationResult.success) {
+        console.log("Verification successful.");
+
+        void router.push("/");
+      }
+    } catch (error) {
+      console.error("Unexpected error during verification:", error);
     }
   };
-
   const handleChange = (index: number, value: string) => {
-    // Ensure the input is a digit
     if (/\d/.test(value) && value.length <= 1) {
-      // Update the OTP array with the new value
       const updatedOtp = [...otp];
       updatedOtp[index] = value;
       setOtp(updatedOtp);
