@@ -6,10 +6,20 @@ import { api } from "~/utils/api";
 
 export default function Signup() {
   const router = useRouter();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    error: "",
+    loading: false,
+  });
+
+  const { name, email, password, error, loading } = formData;
+
+  const handleChange = (e: FormEvent<HTMLInputElement>) => {
+    const { name, value } = e.target as HTMLInputElement;
+    setFormData({ ...formData, [name]: value, error: "" });
+  };
 
   const mutation = api.auth.signup.useMutation();
 
@@ -17,6 +27,8 @@ export default function Signup() {
     e.preventDefault();
 
     try {
+      setFormData({ ...formData, loading: true });
+
       const mutationResult = await mutation.mutateAsync({
         name,
         email,
@@ -24,20 +36,23 @@ export default function Signup() {
       });
 
       if (mutationResult.success) {
-        console.log(mutationResult.user);
         setCookie("userDetails", JSON.stringify(mutationResult.user));
         setCookie("token", JSON.stringify(mutationResult.token));
-
         void router.push("/email-verification");
       }
     } catch (error) {
+      setFormData({
+        ...formData,
+        error: "Failed to create account. Please try again.",
+        loading: false,
+      });
       console.error("Unexpected error during signup:", error);
     }
   };
 
   return (
     <div className="m-10 flex items-center justify-center">
-      <div className="rounded-lg border border-solid border-gray-500  bg-white p-12">
+      <div className="rounded-lg border border-solid border-gray-500 bg-white p-12">
         <h1 className="mb-6 text-center text-2xl font-bold">
           Create your account
         </h1>
@@ -52,8 +67,9 @@ export default function Signup() {
             <input
               type="text"
               id="name"
+              name="name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={handleChange}
               className="focus:shadow-outline w-96 appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
               placeholder="Enter"
             />
@@ -68,8 +84,9 @@ export default function Signup() {
             <input
               type="email"
               id="email"
+              name="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleChange}
               className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
               placeholder="Enter"
             />
@@ -84,8 +101,9 @@ export default function Signup() {
             <input
               type="password"
               id="password"
+              name="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleChange}
               className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
               placeholder="Enter"
             />
@@ -95,8 +113,9 @@ export default function Signup() {
             <button
               className="focus:shadow-outline  w-96  rounded bg-black px-4 py-2  text-white focus:outline-none"
               type="submit"
+              disabled={loading}
             >
-              CREATE ACCOUNT
+              {loading ? "Creating Account..." : "CREATE ACCOUNT"}
             </button>
             <div className="mt-4 text-center">
               <p>

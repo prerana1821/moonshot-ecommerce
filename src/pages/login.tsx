@@ -7,34 +7,71 @@ import { api } from "~/utils/api";
 export default function Login() {
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    showPassword: false,
+    error: "",
+    loading: false,
+  });
+
+  const handleChange = (e: FormEvent<HTMLInputElement>) => {
+    const { name, value } = e.target as HTMLInputElement;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  const toggleShowPassword = () => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      showPassword: !prevFormData.showPassword,
+    }));
+  };
 
   const mutation = api.auth.login.useMutation();
 
-  const toggleShowPassword = () => {
-    setShowPassword((prevShowPassword) => !prevShowPassword);
-  };
-
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      loading: true,
+      error: "",
+    }));
+
+    const { email, password } = formData;
 
     try {
       const response = await mutation.mutateAsync({ email, password });
 
       if (response.success) {
-        console.log("Login successful:", response.user);
-
         setCookie("userDetails", JSON.stringify(response.user));
         setCookie("token", JSON.stringify(response.token));
-
         void router.push("/");
+      } else {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          error: "Invalid credentials.",
+          loading: false,
+        }));
       }
     } catch (error) {
       console.error("Unexpected error during login:", error);
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        error: "Something went wrong! Please try again later.",
+      }));
+    } finally {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        loading: false,
+      }));
     }
   };
+
+  const { email, password, showPassword, error, loading } = formData;
+
   return (
     <div className="my-14 flex flex-col items-center justify-center">
       <div className="w-full max-w-md rounded-lg border  border-solid border-gray-500 bg-white p-10">
@@ -60,7 +97,7 @@ export default function Login() {
               className="w-full rounded-lg border border-gray-300 p-2"
               placeholder="Enter your email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleChange}
             />
           </div>
           <div>
@@ -78,7 +115,7 @@ export default function Login() {
                 className="w-full rounded-lg border border-gray-300 p-2"
                 placeholder="Enter your password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handleChange}
               />
               <button
                 className="absolute right-3 top-1/2 -translate-y-1/2 transform text-gray-400 underline focus:outline-none"
@@ -92,8 +129,9 @@ export default function Login() {
             <button
               type="submit"
               className="w-full rounded bg-black px-4 py-2 text-white hover:bg-gray-800 focus:outline-none"
+              disabled={loading}
             >
-              LOGIN
+              {loading ? "Logging in..." : "LOGIN"}
             </button>
           </div>
         </form>
@@ -102,9 +140,7 @@ export default function Login() {
           <div className="mx-3 text-gray-500">or</div>
           <div className="h-px w-1/2 bg-gray-300"></div>
         </div>
-        {mutation.error && (
-          <p>Something went wrong! {mutation.error.message}</p>
-        )}
+        {error && <p className="mt-4 text-center text-red-500">{error}</p>}
         <div className="mt-4 text-center">
           <p>
             Don&apos;t have an Account?{" "}

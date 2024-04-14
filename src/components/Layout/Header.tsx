@@ -1,10 +1,10 @@
-import { deleteCookie, getCookie } from "cookies-next";
+import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/router";
+import useGetUserCookie from "~/hooks/useGetUserCookie";
 
 const Header = () => {
   const router = useRouter();
-
-  const user = JSON.parse(getCookie("userDetails") || "{}");
+  const user = useGetUserCookie();
 
   const handleLogout = () => {
     deleteCookie("token");
@@ -15,16 +15,14 @@ const Header = () => {
   return (
     <header className="bg-white shadow-md">
       <div className="mr-4 flex items-center justify-end p-2">
-        <p className="mr-4 cursor-pointer text-sm text-gray-600 hover:text-gray-900 ">
+        <a href="#" className="mr-4 text-sm text-gray-600 hover:text-gray-900">
           Help
-        </p>
-        <p className="mr-4 cursor-pointer text-sm text-gray-600 hover:text-gray-900">
+        </a>
+        <a href="#" className="mr-4 text-sm text-gray-600 hover:text-gray-900">
           Orders & Returns
-        </p>
+        </a>
         {user.email && (
-          <p className="mr-4 text-sm text-gray-600 hover:text-gray-900 ">
-            Hi, {user.name}
-          </p>
+          <p className="mr-4 text-sm text-gray-600">Hi, {user.name}</p>
         )}
         {user.email && (
           <button
@@ -42,21 +40,36 @@ const Header = () => {
           </div>
           <div className="hidden md:block">
             <nav className="ml-10 flex items-baseline space-x-4">
-              <p className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">
+              <a
+                href="#"
+                className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
+              >
                 Categories
-              </p>
-              <p className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">
+              </a>
+              <a
+                href="#"
+                className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
+              >
                 Sale
-              </p>
-              <p className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">
+              </a>
+              <a
+                href="#"
+                className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
+              >
                 Clearance
-              </p>
-              <p className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">
+              </a>
+              <a
+                href="#"
+                className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
+              >
                 New stock
-              </p>
-              <p className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">
+              </a>
+              <a
+                href="#"
+                className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
+              >
                 Trending
-              </p>
+              </a>
             </nav>
           </div>
 
